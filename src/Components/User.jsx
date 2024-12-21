@@ -7,6 +7,7 @@ const User = () => {
   const [error, setError] = useState(null); // Gestion des erreurs
   const [showAddForm, setShowAddForm] = useState(false); // État du formulaire d'ajout
   const [newTask, setNewTask] = useState({ title: "", description: "" }); // Nouvelle tâche
+  const [editTask, setEditTask] = useState(null); // Tâche à modifier
 
   const fetchTasks = async () => {
     try {
@@ -57,6 +58,32 @@ const User = () => {
     }
   };
 
+  const handleUpdateTask = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Token non disponible");
+      }
+
+      await axios.put(
+        `https://localhost:7184/api/UserTask/${editTask.id}`,
+        editTask,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setEditTask(null); // Réinitialiser la tâche à modifier
+      fetchTasks(); // Recharger la liste des tâches
+    } catch (error) {
+      console.error("Erreur lors de la modification de la tâche :", error);
+      alert("Impossible de modifier la tâche.");
+    }
+  };
+
   const handleDelete = async (taskId) => {
     try {
       const token = localStorage.getItem("token");
@@ -91,7 +118,7 @@ const User = () => {
 
   return (
     <div className="max-w-4xl mx-auto mt-10">
-      {!showAddForm ? (
+      {!showAddForm && !editTask ? (
         <div>
           <h1 className="text-2xl font-bold mb-5">Mes Tâches</h1>
           <button
@@ -120,7 +147,7 @@ const User = () => {
                   <td className="border px-4 py-2">
                     <button
                       className="bg-success px-3 py-1 rounded mr-4"
-                      onClick={() => alert(`Modifier tâche ${task.id}`)}
+                      onClick={() => setEditTask(task)}
                     >
                       Modifier
                     </button>
@@ -137,14 +164,23 @@ const User = () => {
           </table>
         </div>
       ) : (
-        <form onSubmit={handleAddTask} className="mb-5 p-4 border rounded bg-gray-100">
-          <h2 className="text-xl font-bold mb-4">Ajouter une tâche</h2>
+        <form
+          onSubmit={editTask ? handleUpdateTask : handleAddTask}
+          className="mb-5 p-4 border rounded bg-gray-100"
+        >
+          <h2 className="text-xl font-bold mb-4">
+            {editTask ? "Modifier la tâche" : "Ajouter une tâche"}
+          </h2>
           <div className="mb-4">
             <label className="block text-gray-700">Titre :</label>
             <input
               type="text"
-              value={newTask.title}
-              onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+              value={editTask ? editTask.title : newTask.title}
+              onChange={(e) =>
+                editTask
+                  ? setEditTask({ ...editTask, title: e.target.value })
+                  : setNewTask({ ...newTask, title: e.target.value })
+              }
               className="w-full p-2 border rounded"
               required
             />
@@ -152,17 +188,38 @@ const User = () => {
           <div className="mb-4">
             <label className="block text-gray-700">Description :</label>
             <textarea
-              value={newTask.description}
-              onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+              value={editTask ? editTask.description : newTask.description}
+              onChange={(e) =>
+                editTask
+                  ? setEditTask({ ...editTask, description: e.target.value })
+                  : setNewTask({ ...newTask, description: e.target.value })
+              }
               className="w-full p-2 border rounded"
               required
             ></textarea>
           </div>
+          {editTask && (
+            <div className="mb-4">
+              <label className="block text-gray-700">Statut :</label>
+              <select
+                value={editTask.etat}
+                onChange={(e) =>
+                  setEditTask({ ...editTask, etat: parseInt(e.target.value) })
+                }
+                className="w-full p-2 border rounded"
+                required
+              >
+                <option value={0}>Todo</option>
+                <option value={1}>Doing</option>
+                <option value={2}>Done</option>
+              </select>
+            </div>
+          )}
           <button
             type="submit"
             className="bg-success text-white px-4 py-2 rounded hover:bg-blue-600 transition"
           >
-            Enregistrer
+            {editTask ? "Enregistrer" : "Enregistrer"}
           </button>
         </form>
       )}
