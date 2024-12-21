@@ -46,6 +46,7 @@ const Admin = () => {
       });
 
       setTasks(response.data);
+      setSelectedUser(userId); // Sauvegarder l'utilisateur sélectionné
     } catch (error) {
       console.error("Erreur lors de la récupération des tâches de l'utilisateur :", error);
       setError("Impossible de charger les tâches de l'utilisateur.");
@@ -76,7 +77,6 @@ const Admin = () => {
 
   // Sélectionner un utilisateur et récupérer ses tâches
   const handleUserClick = (userId) => {
-    setSelectedUser(userId);
     fetchUserTasks(userId);
   };
 
@@ -96,42 +96,44 @@ const Admin = () => {
     <div className="max-w-6xl mx-auto mt-10">
       <h1 className="text-2xl font-bold mb-5">Gestion des Tâches Utilisateurs (Admin)</h1>
 
-      <div className="mb-5">
-        <h2 className="text-xl">Utilisateurs</h2>
-        <table className="table-auto w-full border mt-5">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="border px-4 py-2">Nom d'utilisateur</th>
-              <th className="border px-4 py-2">Rôle</th>
-              <th className="border px-4 py-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <tr key={user.id}>
-                <td className="border px-4 py-2">{user.username}</td>
-                <td className="border px-4 py-2">{user.role}</td>
-                <td className="border px-4 py-2 flex space-x-2">
-                  <button
-                    className="text-blue-500"
-                    onClick={() => handleUserClick(user.id)}
-                  >
-                    Voir les tâches
-                  </button>
-                  <button
-                    className="text-red-500"
-                    onClick={() => deleteUser(user.id)}
-                  >
-                    Supprimer
-                  </button>
-                </td>
+      {!selectedUser && ( // Si aucun utilisateur n'est sélectionné, afficher la liste des utilisateurs
+        <div className="mb-5">
+          <h2 className="text-xl">Utilisateurs</h2>
+          <table className="table-auto w-full border mt-5">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="border px-4 py-2">Nom d'utilisateur</th>
+                <th className="border px-4 py-2">Rôle</th>
+                <th className="border px-4 py-2">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {users.map((user) => (
+                <tr key={user.id}>
+                  <td className="border px-4 py-2">{user.username}</td>
+                  <td className="border px-4 py-2">{user.role}</td>
+                  <td className="border px-4 py-2 flex space-x-2">
+                    <button
+                      className="text-blue-500"
+                      onClick={() => handleUserClick(user.id)}
+                    >
+                      Voir les tâches
+                    </button>
+                    <button
+                      className="text-red-500"
+                      onClick={() => deleteUser(user.id)}
+                    >
+                      Supprimer
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
-      {selectedUser && (
+      {selectedUser && ( // Si un utilisateur est sélectionné, afficher les tâches
         <div>
           <h2 className="text-xl">Tâches de l'utilisateur</h2>
           <table className="table-auto w-full border mt-5">
