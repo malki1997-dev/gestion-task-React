@@ -1,0 +1,15 @@
+/* Styles pour les labels */
+.label-custom {
+    width: 150px; /* Largeur fixe */
+    background-color: #c0f0fa; /* Fond clair */
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-align: center; /* Centrer le texte */
+    display: inline-block;
+  }
+.fa-key
+{
+    color:yellowgreen;
+}
+
+  

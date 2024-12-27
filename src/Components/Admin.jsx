@@ -94,11 +94,11 @@ const Admin = () => {
 
   return (
     <div className="max-w-6xl mx-auto mt-10">
-      <h1 className="text-2xl font-bold mb-5">Gestion des Tâches Utilisateurs (Admin)</h1>
+      <h1 className="text-2xl font-bold mb-5">Gestion des Tâches Utilisateurs </h1>
 
       {!selectedUser && ( // Si aucun utilisateur n'est sélectionné, afficher la liste des utilisateurs
         <div className="mb-5">
-          <h2 className="text-xl">Utilisateurs</h2>
+          <h2 className="text-xl">Utilisateurs <i className="fa fa-user"></i> </h2>
           <table className="table-auto w-full border mt-5">
             <thead>
               <tr className="bg-gray-200">

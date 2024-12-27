@@ -120,9 +120,9 @@ const User = () => {
     <div className="max-w-4xl mx-auto mt-10">
       {!showAddForm && !editTask ? (
         <div>
-          <h1 className="text-2xl font-bold mb-5">Mes Tâches</h1>
+          <h1 className="text-2xl font-bold mb-5"> <i className="fas fa-tasks"></i> Mes Taches</h1>
           <button
-            className="bg-success text-white px-4 py-2 rounded mb-4 hover:bg-green-600 transition"
+            className="bg-primary text-white px-4 py-2 rounded mb-4 hover:bg-green-600 transition"
             onClick={() => setShowAddForm(true)}
           >
             Ajouter une tâche
@@ -146,13 +146,13 @@ const User = () => {
                   </td>
                   <td className="border px-4 py-2">
                     <button
-                      className="bg-success px-3 py-1 rounded mr-4"
+                      className=" px-3 py-1 rounded mr-4"
                       onClick={() => setEditTask(task)}
                     >
                       Modifier
                     </button>
                     <button
-                      className="bg-success px-3 py-1 rounded"
+                      className=" px-3 py-1 rounded"
                       onClick={() => handleDelete(task.id)}
                     >
                       Supprimer
@@ -172,7 +172,7 @@ const User = () => {
             {editTask ? "Modifier la tâche" : "Ajouter une tâche"}
           </h2>
           <div className="mb-4">
-            <label className="block text-gray-700">Titre :</label>
+            <label className="block text-gray-700 label-custom">Titre :</label>
             <input
               type="text"
               value={editTask ? editTask.title : newTask.title}
@@ -186,7 +186,7 @@ const User = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Description :</label>
+            <label className="block text-gray-700 label-custom">Description :</label>
             <textarea
               value={editTask ? editTask.description : newTask.description}
               onChange={(e) =>
@@ -200,7 +200,7 @@ const User = () => {
           </div>
           {editTask && (
             <div className="mb-4">
-              <label className="block text-gray-700">Statut :</label>
+              <label className="block text-gray-700 label-custom">Statut :</label>
               <select
                 value={editTask.etat}
                 onChange={(e) =>

@@ -27,7 +27,9 @@ const RegisterForm = () => {
 
   return (
     <div className="container mt-5">
-      <h2 className="text-center mb-4">Inscription</h2>
+      <h2 className="text-center mb-4">
+        Inscription <i className="fas fa-user-plus"></i>
+      </h2>
       <form className="mx-auto" style={{ maxWidth: '400px' }} onSubmit={handleRegister}>
         <div className="mb-3">
           <label className="form-label">Nom d'utilisateur</label>

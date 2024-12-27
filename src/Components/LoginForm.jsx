@@ -1,18 +1,17 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  // Fonction pour décoder manuellement un token JWT
   const decodeToken = (token) => {
     try {
-      const payloadBase64 = token.split(".")[1]; // Extraire la partie payload
-      const payloadDecoded = atob(payloadBase64); // Décoder le payload en base64
-      return JSON.parse(payloadDecoded); // Retourner l'objet JSON
+      const payloadBase64 = token.split(".")[1];
+      const payloadDecoded = atob(payloadBase64);
+      return JSON.parse(payloadDecoded);
     } catch (error) {
       console.error("Erreur lors du décodage du token :", error);
       return null;
@@ -28,21 +27,21 @@ const LoginForm = () => {
         password,
       });
 
-      const { token } = response.data; // Récupérer le token
-      localStorage.setItem("token", token); // Stocker le token
+      const { token } = response.data;
+      localStorage.setItem("token", token);
 
-      // Décoder le token pour récupérer le rôle
       const decodedToken = decodeToken(token);
       if (!decodedToken) {
         alert("Erreur lors du décodage du token");
         return;
       }
 
-      const role = decodedToken.role || decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+      const role =
+        decodedToken.role ||
+        decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
 
       console.log("Rôle décodé:", role);
 
-      // Rediriger selon le rôle
       if (role === "Admin") {
         navigate("/admin");
       } else if (role === "User") {
@@ -51,7 +50,6 @@ const LoginForm = () => {
         alert("Rôle inconnu");
       }
     } catch (error) {
-      // Gestion des erreurs
       alert("Erreur lors de la connexion");
       console.error("Erreur:", error.response || error);
     }
@@ -59,10 +57,14 @@ const LoginForm = () => {
 
   return (
     <div className="max-w-md mx-auto mt-10 p-5 bg-white shadow-lg rounded">
-      <h2 className="text-2xl font-bold text-center mb-5">Connexion</h2>
+      <div className="text-center mb-5">
+        <h2 className="text-2xl font-bold">
+          Connexion <i className="fas fa-key"></i>
+        </h2>
+      </div>
       <form onSubmit={handleLogin}>
         <div className="mb-4">
-          <label htmlFor="username" className="block text-gray-700">
+          <label htmlFor="username" className="block label-custom">
             Nom d'utilisateur :
           </label>
           <input
@@ -75,7 +77,7 @@ const LoginForm = () => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="password" className="block text-gray-700">
+          <label htmlFor="password" className="block label-custom">
             Mot de passe :
           </label>
           <input
@@ -89,11 +91,16 @@ const LoginForm = () => {
         </div>
         <button
           type="submit"
-          className="w-full bg-success text-white py-2 rounded hover:bg-blue-600 transition"
+          className="w-full bg-primary text-white py-2 rounded hover:bg-blue-600 transition"
         >
           Connexion
         </button>
       </form>
+      <div className="text-center mt-4">
+        <Link to="/register" className="text-blue-500 hover:underline">
+          Pas encore de compte ? Inscrivez-vous
+        </Link>
+      </div>
     </div>
   );
 };
